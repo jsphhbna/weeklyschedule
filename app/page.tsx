@@ -113,7 +113,7 @@ export default function SchedulePage() {
                         />
                         <span className="truncate">{entry.name}</span>
                         <span className="text-xs opacity-75 flex-shrink-0">
-                          {entry.type === 'opening' ? 'OP' : 'CL'}
+                          {entry.type === 'opening' ? 'OPENING' : 'CLOSING'}
                         </span>
                       </div>
                       <button
