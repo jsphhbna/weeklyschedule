@@ -78,12 +78,17 @@ export default function SchedulePage() {
 
   const handleDownload = async () => {
     if (captureRef.current) {
-      setIsCapturing(true);
+      const isMobile = window.innerWidth < 1024;
+      
+      if (isMobile) {
+        setIsCapturing(true);
+      }
+
       try {
         const previousActiveDay = activeDay;
         setActiveDay(null);
         
-        await new Promise((resolve) => setTimeout(resolve, 150));
+        await new Promise((resolve) => setTimeout(resolve, isMobile ? 150 : 50));
 
         const filter = (node: HTMLElement) => {
           return !node.classList?.contains('exclude-from-capture');
@@ -93,6 +98,7 @@ export default function SchedulePage() {
           backgroundColor: '#0f172a',
           pixelRatio: 2,
           filter: filter,
+          width: isMobile ? 1200 : undefined,
         });
         
         const link = document.createElement('a');
@@ -104,7 +110,9 @@ export default function SchedulePage() {
       } catch (error) {
         console.error('Failed to download schedule', error);
       } finally {
-        setIsCapturing(false);
+        if (isMobile) {
+          setIsCapturing(false);
+        }
       }
     }
   }
@@ -113,9 +121,9 @@ export default function SchedulePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6 overflow-x-hidden relative">
       {/* Loading Overlay */}
       {isCapturing && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-md">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-white font-medium text-lg">Generating Image...</p>
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/95 transition-opacity">
+          <p className="text-white font-semibold text-lg drop-shadow-md">Formatting layout...</p>
+          <p className="text-slate-400 text-sm mt-2">Please wait a moment.</p>
         </div>
       )}
 
