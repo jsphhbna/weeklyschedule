@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { X, Plus } from 'lucide-react'
+import { X, Plus, Download } from 'lucide-react'
+import html2canvas from 'html2canvas'
 
 interface ShiftEntry {
   id: string
@@ -68,13 +69,48 @@ export default function SchedulePage() {
     }
   }
 
+  const handleDownload = async () => {
+    if (gridRef.current) {
+      try {
+        const previousActiveDay = activeDay;
+        setActiveDay(null);
+        
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        const canvas = await html2canvas(gridRef.current, {
+          backgroundColor: '#0f172a',
+          scale: 2,
+        });
+        
+        const dataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = `weekly-schedule.png`;
+        link.href = dataUrl;
+        link.click();
+
+        setActiveDay(previousActiveDay);
+      } catch (error) {
+        console.error('Failed to download schedule', error);
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Weekly Schedule</h1>
-          <p className="text-sm md:text-base text-slate-400">Manage your team&apos;s opening and closing shifts</p>
+        <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Weekly Schedule</h1>
+            <p className="text-sm md:text-base text-slate-400">Manage your team&apos;s opening and closing shifts</p>
+          </div>
+          <button
+            onClick={handleDownload}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors border border-slate-700 font-medium w-full md:w-auto"
+          >
+            <Download size={18} />
+            Download PNG
+          </button>
         </div>
 
         {/* Days Grid */}
