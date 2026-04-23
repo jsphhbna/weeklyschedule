@@ -1,8 +1,12 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { X, Plus, Download } from 'lucide-react'
+import { X, Plus, Download, Calendar as CalendarIcon } from 'lucide-react'
 import { toPng } from 'html-to-image'
+import { addDays, format, startOfWeek, endOfWeek } from 'date-fns'
+import { DateRange } from 'react-day-picker'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
 
 interface ShiftEntry {
   id: string
@@ -23,7 +27,10 @@ export default function SchedulePage() {
   const [activeDay, setActiveDay] = useState<string | null>(null)
   const [inputName, setInputName] = useState('')
   const [selectedType, setSelectedType] = useState<'opening' | 'closing'>('opening')
-  const [weekDateRange, setWeekDateRange] = useState('April 20 - 29')
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: startOfWeek(new Date(), { weekStartsOn: 1 }),
+    to: endOfWeek(new Date(), { weekStartsOn: 1 }),
+  })
   const gridRef = useRef<HTMLDivElement>(null)
   const captureRef = useRef<HTMLDivElement>(null)
 
@@ -108,13 +115,38 @@ export default function SchedulePage() {
         <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex-1">
             <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Weekly Schedule</h1>
-            <input
-              type="text"
-              value={weekDateRange}
-              onChange={(e) => setWeekDateRange(e.target.value)}
-              className="text-sm md:text-base text-slate-400 bg-transparent border-none outline-none hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded px-2 -ml-2 py-1 transition-all w-full max-w-sm"
-              placeholder="Enter date range (e.g. April 20 - 29)"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  className={`text-sm md:text-base text-slate-400 bg-transparent border-none outline-none hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded px-2 -ml-2 py-1 transition-all w-fit flex items-center ${
+                    !date ? "text-slate-500" : ""
+                  }`}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "MMM d")} - {format(date.to, "MMM d, yyyy")}
+                      </>
+                    ) : (
+                      format(date.from, "MMM d, yyyy")
+                    )
+                  ) : (
+                    <span>Pick a date range</span>
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 dark bg-slate-950 border-slate-800 text-white" align="start">
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={date?.from}
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <button
             onClick={handleDownload}
