@@ -96,7 +96,7 @@ export default function SchedulePage() {
           backgroundColor: '#0f172a',
           pixelRatio: 2,
           filter: filter,
-          width: 960,
+          width: 850,
         });
 
         const link = document.createElement('a');
@@ -123,12 +123,12 @@ export default function SchedulePage() {
         </div>
       )}
 
-      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl ${isCapturing ? 'w-[960px] max-w-none' : 'max-w-7xl'}`}>
+      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl ${isCapturing ? 'w-[850px] max-w-none' : 'max-w-7xl'}`}>
         {/* Header */}
         <div className="relative mb-8 md:mb-12">
           {/* Main Title and Date */}
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className={`font-extrabold text-white mb-3 tracking-tight ${isCapturing ? 'text-5xl' : 'text-3xl md:text-4xl'}`}>
+            <h1 className={`font-extrabold text-white mb-3 tracking-tight ${isCapturing ? 'text-6xl' : 'text-3xl md:text-4xl'}`}>
               Weekly Schedule
             </h1>
             <Popover>
@@ -136,9 +136,9 @@ export default function SchedulePage() {
                 <button
                   className={`border-none outline-none flex items-center justify-center transition-all ${
                     !date ? "text-slate-400" : "text-blue-400 font-semibold"
-                  } ${isCapturing ? 'text-2xl mt-1' : 'text-base md:text-xl hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded-md px-4 py-2 w-full md:w-auto'}`}
+                  } ${isCapturing ? 'text-3xl mt-2' : 'text-base md:text-xl hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded-md px-4 py-2 w-full md:w-auto'}`}
                 >
-                  <CalendarIcon className={`mr-2 ${isCapturing ? 'h-6 w-6' : 'h-5 w-5 md:h-6 md:w-6'}`} />
+                  <CalendarIcon className={`mr-2 ${isCapturing ? 'h-8 w-8' : 'h-5 w-5 md:h-6 md:w-6'}`} />
                   {date?.from ? (
                     date.to ? (
                       <>
@@ -189,12 +189,12 @@ export default function SchedulePage() {
                   : 'bg-slate-800 border border-slate-700 hover:border-slate-600'
               }`}
             >
-              <h2 className={`font-semibold text-white mb-3 ${isCapturing ? 'text-2xl mb-4 mt-1' : 'text-base md:text-lg'}`}>{day}</h2>
+              <h2 className={`font-semibold text-white mb-3 ${isCapturing ? 'text-3xl mb-5 mt-2' : 'text-base md:text-lg'}`}>{day}</h2>
 
               {/* Shifts List */}
               <div className="space-y-2 mb-3">
                 {schedule[day].length === 0 ? (
-                  <p className={`text-slate-500 ${isCapturing ? 'text-lg py-2' : 'text-xs md:text-sm'}`}>No shifts added</p>
+                  <p className={`text-slate-500 ${isCapturing ? 'text-xl py-3' : 'text-xs md:text-sm'}`}>No shifts added</p>
                 ) : (
                   schedule[day].map((entry) => (
                     <div
@@ -203,16 +203,16 @@ export default function SchedulePage() {
                         entry.type === 'opening'
                           ? 'bg-green-500/20 text-green-300 border border-green-500/50'
                           : 'bg-red-500/20 text-red-300 border border-red-500/50'
-                      } ${isCapturing ? 'px-4 py-3 text-lg mt-2' : 'px-2 md:px-3 text-xs md:text-sm'}`}
+                      } ${isCapturing ? 'px-5 py-4 text-xl mt-3' : 'px-2 md:px-3 text-xs md:text-sm'}`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <div
                           className={`w-2 h-2 rounded-full flex-shrink-0 ${
                             entry.type === 'opening' ? 'bg-green-400' : 'bg-red-400'
-                          } ${isCapturing ? 'w-3 h-3' : ''}`}
+                          } ${isCapturing ? 'w-4 h-4' : ''}`}
                         />
                         <span className="truncate">{entry.name}</span>
-                        <span className={`opacity-75 flex-shrink-0 ${isCapturing ? 'text-base font-bold' : 'text-xs'}`}>
+                        <span className={`opacity-75 flex-shrink-0 ${isCapturing ? 'text-lg font-extrabold' : 'text-xs'}`}>
                           {entry.type === 'opening' ? 'OPENING' : 'CLOSING'}
                         </span>
                       </div>
