@@ -284,7 +284,19 @@ export default function SchedulePage() {
           ))}
         </div>
 
-
+        {/* Legend for Image Capture */}
+        {isCapturing && (
+          <div className="flex items-center justify-center gap-10 mt-10 mb-4 pt-8 border-t border-slate-800/80">
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 rounded-md bg-green-500/20 border-2 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.1)]"></div>
+              <span className="text-white font-extrabold text-3xl tracking-wide text-slate-200">OPENING</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 rounded-md bg-red-500/20 border-2 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]"></div>
+              <span className="text-white font-extrabold text-3xl tracking-wide text-slate-200">CLOSING</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
