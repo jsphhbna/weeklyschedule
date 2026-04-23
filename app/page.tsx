@@ -28,6 +28,7 @@ export default function SchedulePage() {
   const [inputName, setInputName] = useState('')
   const [selectedType, setSelectedType] = useState<'opening' | 'closing'>('opening')
   const [date, setDate] = useState<DateRange | undefined>()
+  const [isCapturing, setIsCapturing] = useState(false)
   const gridRef = useRef<HTMLDivElement>(null)
   const captureRef = useRef<HTMLDivElement>(null)
 
@@ -77,11 +78,12 @@ export default function SchedulePage() {
 
   const handleDownload = async () => {
     if (captureRef.current) {
+      setIsCapturing(true);
       try {
         const previousActiveDay = activeDay;
         setActiveDay(null);
         
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 150));
 
         const filter = (node: HTMLElement) => {
           return !node.classList?.contains('exclude-from-capture');
@@ -101,23 +103,25 @@ export default function SchedulePage() {
         setActiveDay(previousActiveDay);
       } catch (error) {
         console.error('Failed to download schedule', error);
+      } finally {
+        setIsCapturing(false);
       }
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6">
-      <div ref={captureRef} className="max-w-7xl mx-auto p-4 sm:p-6 rounded-xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6 overflow-x-hidden">
+      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl transition-all ${isCapturing ? 'w-[1200px] max-w-none' : 'max-w-7xl'}`}>
         {/* Header */}
-        <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className={`mb-6 md:mb-8 flex justify-between gap-4 ${isCapturing ? 'flex-row items-center' : 'flex-col md:flex-row md:items-center'}`}>
           <div className="flex-1">
-            <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Weekly Schedule</h1>
+            <h1 className={`font-bold text-white mb-2 ${isCapturing ? 'text-4xl' : 'text-2xl md:text-4xl'}`}>Weekly Schedule</h1>
             <Popover>
               <PopoverTrigger asChild>
                 <button
-                  className={`text-sm md:text-base text-slate-400 bg-transparent border-none outline-none hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded px-2 -ml-2 py-1 transition-all w-fit flex items-center ${
+                  className={`text-slate-400 bg-transparent border-none outline-none flex items-center transition-all w-fit ${
                     !date ? "text-slate-500" : ""
-                  }`}
+                  } ${isCapturing ? 'text-base rounded-none px-0' : 'text-sm md:text-base hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded px-2 -ml-2 py-1'}`}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date?.from ? (
@@ -155,7 +159,7 @@ export default function SchedulePage() {
         </div>
 
         {/* Days Grid */}
-        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+        <div ref={gridRef} className={`grid gap-3 md:gap-4 mb-8 ${isCapturing ? 'grid-cols-4' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
           {DAYS.map((day) => (
             <div
               key={day}
@@ -166,21 +170,21 @@ export default function SchedulePage() {
                   : 'bg-slate-800 border border-slate-700 hover:border-slate-600'
               }`}
             >
-              <h2 className="text-base md:text-lg font-semibold text-white mb-3">{day}</h2>
+              <h2 className={`font-semibold text-white mb-3 ${isCapturing ? 'text-lg' : 'text-base md:text-lg'}`}>{day}</h2>
 
               {/* Shifts List */}
               <div className="space-y-2 mb-3">
                 {schedule[day].length === 0 ? (
-                  <p className="text-slate-500 text-xs md:text-sm">No shifts added</p>
+                  <p className={`text-slate-500 ${isCapturing ? 'text-sm' : 'text-xs md:text-sm'}`}>No shifts added</p>
                 ) : (
                   schedule[day].map((entry) => (
                     <div
                       key={entry.id}
-                      className={`flex items-center justify-between px-2 md:px-3 py-2 rounded-md text-xs md:text-sm font-medium ${
+                      className={`flex items-center justify-between py-2 rounded-md font-medium ${
                         entry.type === 'opening'
                           ? 'bg-green-500/20 text-green-300 border border-green-500/50'
                           : 'bg-red-500/20 text-red-300 border border-red-500/50'
-                      }`}
+                      } ${isCapturing ? 'px-3 text-sm' : 'px-2 md:px-3 text-xs md:text-sm'}`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <div
