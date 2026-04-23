@@ -121,13 +121,13 @@ export default function SchedulePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6 overflow-x-hidden relative">
       {/* Loading Overlay */}
       {isCapturing && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/95 transition-opacity">
-          <p className="text-white font-semibold text-lg drop-shadow-md">Formatting layout...</p>
-          <p className="text-slate-400 text-sm mt-2">Please wait a moment.</p>
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
+          <p className="text-white font-bold text-2xl drop-shadow-md">Formatting layout...</p>
+          <p className="text-slate-400 text-sm mt-3">Almost done.</p>
         </div>
       )}
 
-      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl transition-all ${isCapturing ? 'w-[1200px] max-w-none' : 'max-w-7xl'}`}>
+      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl ${isCapturing ? 'w-[1200px] max-w-none' : 'max-w-7xl'}`}>
         {/* Header */}
         <div className={`mb-6 md:mb-8 flex justify-between gap-4 ${isCapturing ? 'flex-row items-center' : 'flex-col md:flex-row md:items-center'}`}>
           <div className="flex-1">
