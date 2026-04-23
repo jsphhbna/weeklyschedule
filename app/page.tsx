@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { X, Plus, Download } from 'lucide-react'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 
 interface ShiftEntry {
   id: string
@@ -77,12 +77,11 @@ export default function SchedulePage() {
         
         await new Promise((resolve) => setTimeout(resolve, 50));
 
-        const canvas = await html2canvas(gridRef.current, {
+        const dataUrl = await toPng(gridRef.current, {
           backgroundColor: '#0f172a',
-          scale: 2,
+          pixelRatio: 2,
         });
         
-        const dataUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.download = `weekly-schedule.png`;
         link.href = dataUrl;
