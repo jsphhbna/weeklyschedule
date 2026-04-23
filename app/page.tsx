@@ -78,56 +78,37 @@ export default function SchedulePage() {
 
   const handleDownload = async () => {
     if (captureRef.current) {
-      const isMobile = window.innerWidth < 1024;
-
       const filter = (node: HTMLElement) => {
         if (node.classList?.contains('exclude-from-capture')) return false;
         if (node.classList?.contains('add-form-section')) return false;
         return true;
       };
 
-      if (isMobile) {
-        // Mobile: show overlay, force desktop layout, capture, then restore
-        setIsCapturing(true);
-        try {
-          const previousActiveDay = activeDay;
-          setActiveDay(null);
+      setIsCapturing(true);
+      try {
+        const previousActiveDay = activeDay;
+        setActiveDay(null);
 
-          await new Promise((resolve) => setTimeout(resolve, 200));
+        // Allow React to commit the layout overlay and styling adjustments
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
-          const dataUrl = await toPng(captureRef.current, {
-            backgroundColor: '#0f172a',
-            pixelRatio: 2,
-            filter: filter,
-          });
+        const dataUrl = await toPng(captureRef.current, {
+          backgroundColor: '#0f172a',
+          pixelRatio: 2,
+          filter: filter,
+          width: 960,
+        });
 
-          const link = document.createElement('a');
-          link.download = `weekly-schedule.png`;
-          link.href = dataUrl;
-          link.click();
+        const link = document.createElement('a');
+        link.download = `weekly-schedule.png`;
+        link.href = dataUrl;
+        link.click();
 
-          setActiveDay(previousActiveDay);
-        } catch (error) {
-          console.error('Failed to download schedule', error);
-        } finally {
-          setIsCapturing(false);
-        }
-      } else {
-        // Desktop: capture as-is, no DOM changes at all
-        try {
-          const dataUrl = await toPng(captureRef.current, {
-            backgroundColor: '#0f172a',
-            pixelRatio: 2,
-            filter: filter,
-          });
-
-          const link = document.createElement('a');
-          link.download = `weekly-schedule.png`;
-          link.href = dataUrl;
-          link.click();
-        } catch (error) {
-          console.error('Failed to download schedule', error);
-        }
+        setActiveDay(previousActiveDay);
+      } catch (error) {
+        console.error('Failed to download schedule', error);
+      } finally {
+        setIsCapturing(false);
       }
     }
   }
@@ -142,7 +123,7 @@ export default function SchedulePage() {
         </div>
       )}
 
-      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl ${isCapturing ? 'w-[1200px] max-w-none' : 'max-w-7xl'}`}>
+      <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl ${isCapturing ? 'w-[960px] max-w-none' : 'max-w-7xl'}`}>
         {/* Header */}
         <div className="relative mb-8 md:mb-12">
           {/* Main Title and Date */}
