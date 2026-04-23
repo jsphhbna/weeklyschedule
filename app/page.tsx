@@ -144,17 +144,20 @@ export default function SchedulePage() {
 
       <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl ${isCapturing ? 'w-[1200px] max-w-none' : 'max-w-7xl'}`}>
         {/* Header */}
-        <div className={`mb-6 md:mb-8 flex justify-between gap-4 ${isCapturing ? 'flex-row items-center' : 'flex-col md:flex-row md:items-center'}`}>
-          <div className="flex-1">
-            <h1 className={`font-bold text-white mb-2 ${isCapturing ? 'text-4xl' : 'text-2xl md:text-4xl'}`}>Weekly Schedule</h1>
+        <div className="relative mb-8 md:mb-12">
+          {/* Main Title and Date */}
+          <div className="flex flex-col items-center justify-center text-center">
+            <h1 className={`font-extrabold text-white mb-3 tracking-tight ${isCapturing ? 'text-5xl' : 'text-3xl md:text-4xl'}`}>
+              Weekly Schedule
+            </h1>
             <Popover>
               <PopoverTrigger asChild>
                 <button
-                  className={`text-slate-400 bg-transparent border-none outline-none flex items-center transition-all w-fit ${
-                    !date ? "text-slate-500" : ""
-                  } ${isCapturing ? 'text-base rounded-none px-0' : 'text-sm md:text-base hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded px-2 -ml-2 py-1'}`}
+                  className={`border-none outline-none flex items-center justify-center transition-all ${
+                    !date ? "text-slate-400" : "text-blue-400 font-semibold"
+                  } ${isCapturing ? 'text-2xl mt-1' : 'text-base md:text-xl hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded-md px-4 py-2 w-full md:w-auto'}`}
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <CalendarIcon className={`mr-2 ${isCapturing ? 'h-6 w-6' : 'h-5 w-5 md:h-6 md:w-6'}`} />
                   {date?.from ? (
                     date.to ? (
                       <>
@@ -168,7 +171,7 @@ export default function SchedulePage() {
                   )}
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 dark bg-slate-950 border-slate-800 text-white" align="start">
+              <PopoverContent className="w-auto p-0 dark bg-slate-950 border-slate-800 text-white" align="center">
                 <Calendar
                   initialFocus
                   mode="range"
@@ -180,13 +183,17 @@ export default function SchedulePage() {
               </PopoverContent>
             </Popover>
           </div>
-          <button
-            onClick={handleDownload}
-            className="exclude-from-capture flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors border border-slate-700 font-medium w-full md:w-auto"
-          >
-            <Download size={18} />
-            Download PNG
-          </button>
+
+          {/* Download Button */}
+          <div className={`mt-6 md:mt-0 md:absolute md:top-0 md:right-0 ${isCapturing ? 'hidden' : 'block'}`}>
+            <button
+              onClick={handleDownload}
+              className="exclude-from-capture flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors border border-slate-700 font-medium w-full md:w-auto shadow-sm"
+            >
+              <Download size={18} />
+              Download PNG
+            </button>
+          </div>
         </div>
 
         {/* Days Grid */}
