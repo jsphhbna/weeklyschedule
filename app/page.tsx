@@ -189,12 +189,12 @@ export default function SchedulePage() {
                   : 'bg-slate-800 border border-slate-700 hover:border-slate-600'
               }`}
             >
-              <h2 className={`font-semibold text-white mb-3 ${isCapturing ? 'text-lg' : 'text-base md:text-lg'}`}>{day}</h2>
+              <h2 className={`font-semibold text-white mb-3 ${isCapturing ? 'text-2xl mb-4 mt-1' : 'text-base md:text-lg'}`}>{day}</h2>
 
               {/* Shifts List */}
               <div className="space-y-2 mb-3">
                 {schedule[day].length === 0 ? (
-                  <p className={`text-slate-500 ${isCapturing ? 'text-sm' : 'text-xs md:text-sm'}`}>No shifts added</p>
+                  <p className={`text-slate-500 ${isCapturing ? 'text-lg py-2' : 'text-xs md:text-sm'}`}>No shifts added</p>
                 ) : (
                   schedule[day].map((entry) => (
                     <div
@@ -203,16 +203,16 @@ export default function SchedulePage() {
                         entry.type === 'opening'
                           ? 'bg-green-500/20 text-green-300 border border-green-500/50'
                           : 'bg-red-500/20 text-red-300 border border-red-500/50'
-                      } ${isCapturing ? 'px-3 text-sm' : 'px-2 md:px-3 text-xs md:text-sm'}`}
+                      } ${isCapturing ? 'px-4 py-3 text-lg mt-2' : 'px-2 md:px-3 text-xs md:text-sm'}`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <div
                           className={`w-2 h-2 rounded-full flex-shrink-0 ${
                             entry.type === 'opening' ? 'bg-green-400' : 'bg-red-400'
-                          }`}
+                          } ${isCapturing ? 'w-3 h-3' : ''}`}
                         />
                         <span className="truncate">{entry.name}</span>
-                        <span className="text-xs opacity-75 flex-shrink-0">
+                        <span className={`opacity-75 flex-shrink-0 ${isCapturing ? 'text-base font-bold' : 'text-xs'}`}>
                           {entry.type === 'opening' ? 'OPENING' : 'CLOSING'}
                         </span>
                       </div>
