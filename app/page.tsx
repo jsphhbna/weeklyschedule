@@ -110,7 +110,15 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6 overflow-x-hidden relative">
+      {/* Loading Overlay */}
+      {isCapturing && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-md">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+          <p className="text-white font-medium text-lg">Generating Image...</p>
+        </div>
+      )}
+
       <div ref={captureRef} className={`mx-auto p-4 sm:p-6 rounded-xl transition-all ${isCapturing ? 'w-[1200px] max-w-none' : 'max-w-7xl'}`}>
         {/* Header */}
         <div className={`mb-6 md:mb-8 flex justify-between gap-4 ${isCapturing ? 'flex-row items-center' : 'flex-col md:flex-row md:items-center'}`}>
