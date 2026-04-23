@@ -199,29 +199,20 @@ export default function SchedulePage() {
                   schedule[day].map((entry) => (
                     <div
                       key={entry.id}
-                      className={`flex items-center justify-between py-2 rounded-md font-medium ${
+                      className={`relative flex items-center justify-center text-center rounded-md font-bold ${
                         entry.type === 'opening'
-                          ? 'bg-green-500/20 text-green-300 border border-green-500/50'
-                          : 'bg-red-500/20 text-red-300 border border-red-500/50'
-                      } ${isCapturing ? 'px-5 py-4 text-xl mt-3' : 'px-2 md:px-3 text-xs md:text-sm'}`}
+                          ? 'bg-green-500/20 text-green-300 border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.1)]'
+                          : 'bg-red-500/20 text-red-300 border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]'
+                      } ${isCapturing ? 'py-4 px-2 text-2xl mt-4 leading-tight' : 'py-2 px-6 text-sm md:text-base'}`}
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div
-                          className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                            entry.type === 'opening' ? 'bg-green-400' : 'bg-red-400'
-                          } ${isCapturing ? 'w-4 h-4' : ''}`}
-                        />
-                        <span className="truncate">{entry.name}</span>
-                        <span className={`opacity-75 flex-shrink-0 ${isCapturing ? 'text-lg font-extrabold' : 'text-xs'}`}>
-                          {entry.type === 'opening' ? 'OPENING' : 'CLOSING'}
-                        </span>
-                      </div>
+                      <span className="break-words w-full">{entry.name}</span>
+                      
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           removeShift(day, entry.id)
                         }}
-                        className="hover:opacity-75 transition-opacity flex-shrink-0 ml-2"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 exclude-from-capture hover:opacity-75 transition-opacity"
                       >
                         <X size={14} />
                       </button>
