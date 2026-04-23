@@ -27,10 +27,7 @@ export default function SchedulePage() {
   const [activeDay, setActiveDay] = useState<string | null>(null)
   const [inputName, setInputName] = useState('')
   const [selectedType, setSelectedType] = useState<'opening' | 'closing'>('opening')
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    to: endOfWeek(new Date(), { weekStartsOn: 1 }),
-  })
+  const [date, setDate] = useState<DateRange | undefined>()
   const gridRef = useRef<HTMLDivElement>(null)
   const captureRef = useRef<HTMLDivElement>(null)
 
