@@ -79,39 +79,54 @@ export default function SchedulePage() {
   const handleDownload = async () => {
     if (captureRef.current) {
       const isMobile = window.innerWidth < 1024;
-      
+
+      const filter = (node: HTMLElement) => {
+        if (node.classList?.contains('exclude-from-capture')) return false;
+        if (node.classList?.contains('add-form-section')) return false;
+        return true;
+      };
+
       if (isMobile) {
+        // Mobile: show overlay, force desktop layout, capture, then restore
         setIsCapturing(true);
-      }
+        try {
+          const previousActiveDay = activeDay;
+          setActiveDay(null);
 
-      try {
-        const previousActiveDay = activeDay;
-        setActiveDay(null);
-        
-        await new Promise((resolve) => setTimeout(resolve, isMobile ? 150 : 50));
+          await new Promise((resolve) => setTimeout(resolve, 200));
 
-        const filter = (node: HTMLElement) => {
-          return !node.classList?.contains('exclude-from-capture');
-        };
+          const dataUrl = await toPng(captureRef.current, {
+            backgroundColor: '#0f172a',
+            pixelRatio: 2,
+            filter: filter,
+          });
 
-        const dataUrl = await toPng(captureRef.current, {
-          backgroundColor: '#0f172a',
-          pixelRatio: 2,
-          filter: filter,
-          width: isMobile ? 1200 : undefined,
-        });
-        
-        const link = document.createElement('a');
-        link.download = `weekly-schedule.png`;
-        link.href = dataUrl;
-        link.click();
+          const link = document.createElement('a');
+          link.download = `weekly-schedule.png`;
+          link.href = dataUrl;
+          link.click();
 
-        setActiveDay(previousActiveDay);
-      } catch (error) {
-        console.error('Failed to download schedule', error);
-      } finally {
-        if (isMobile) {
+          setActiveDay(previousActiveDay);
+        } catch (error) {
+          console.error('Failed to download schedule', error);
+        } finally {
           setIsCapturing(false);
+        }
+      } else {
+        // Desktop: capture as-is, no DOM changes at all
+        try {
+          const dataUrl = await toPng(captureRef.current, {
+            backgroundColor: '#0f172a',
+            pixelRatio: 2,
+            filter: filter,
+          });
+
+          const link = document.createElement('a');
+          link.download = `weekly-schedule.png`;
+          link.href = dataUrl;
+          link.click();
+        } catch (error) {
+          console.error('Failed to download schedule', error);
         }
       }
     }
@@ -231,7 +246,7 @@ export default function SchedulePage() {
               {activeDay === day && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="pt-3 border-t border-slate-700 space-y-2"
+                  className="add-form-section pt-3 border-t border-slate-700 space-y-2"
                 >
                   <input
                     type="text"
