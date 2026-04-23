@@ -23,7 +23,9 @@ export default function SchedulePage() {
   const [activeDay, setActiveDay] = useState<string | null>(null)
   const [inputName, setInputName] = useState('')
   const [selectedType, setSelectedType] = useState<'opening' | 'closing'>('opening')
+  const [weekDateRange, setWeekDateRange] = useState('April 20 - 29')
   const gridRef = useRef<HTMLDivElement>(null)
+  const captureRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,16 +72,21 @@ export default function SchedulePage() {
   }
 
   const handleDownload = async () => {
-    if (gridRef.current) {
+    if (captureRef.current) {
       try {
         const previousActiveDay = activeDay;
         setActiveDay(null);
         
         await new Promise((resolve) => setTimeout(resolve, 50));
 
-        const dataUrl = await toPng(gridRef.current, {
+        const filter = (node: HTMLElement) => {
+          return !node.classList?.contains('exclude-from-capture');
+        };
+
+        const dataUrl = await toPng(captureRef.current, {
           backgroundColor: '#0f172a',
           pixelRatio: 2,
+          filter: filter,
         });
         
         const link = document.createElement('a');
@@ -96,16 +103,22 @@ export default function SchedulePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-6">
-      <div className="max-w-7xl mx-auto">
+      <div ref={captureRef} className="max-w-7xl mx-auto p-4 sm:p-6 rounded-xl">
         {/* Header */}
         <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Weekly Schedule</h1>
-            <p className="text-sm md:text-base text-slate-400">Manage your team&apos;s opening and closing shifts</p>
+            <input
+              type="text"
+              value={weekDateRange}
+              onChange={(e) => setWeekDateRange(e.target.value)}
+              className="text-sm md:text-base text-slate-400 bg-transparent border-none outline-none hover:bg-slate-800/50 focus:bg-slate-800/50 focus:ring-1 focus:ring-slate-700 rounded px-2 -ml-2 py-1 transition-all w-full max-w-sm"
+              placeholder="Enter date range (e.g. April 20 - 29)"
+            />
           </div>
           <button
             onClick={handleDownload}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors border border-slate-700 font-medium w-full md:w-auto"
+            className="exclude-from-capture flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors border border-slate-700 font-medium w-full md:w-auto"
           >
             <Download size={18} />
             Download PNG
